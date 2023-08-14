@@ -17,7 +17,6 @@ export default class Game extends Phaser.Scene {
 
     create(){
 
-
         this.pala = this.physics.add.sprite( 300, 300, "pala").setCollideWorldBounds(true);
 
         this.pelota = this.physics.add.sprite( 300, 120, "pelota").setBounce(1).setCollideWorldBounds(true);
@@ -44,7 +43,7 @@ export default class Game extends Phaser.Scene {
             fill: "#ffffff",
         }); 
 
-        this.scoreText = this.add.text (500, 20, "TOQUES: ", {
+        this.scoreText = this.add.text (500, 20, "PUNTOS: ", {
             fontsize: "32 px",
             fill: "#ffffff",
         });
@@ -76,21 +75,28 @@ export default class Game extends Phaser.Scene {
             this.leveltText.setText("NIVEL: " + this.nivel); 
             this.addObstaculo(); 
             this.suma = 0; 
-            //this.pelota.setVelocityY(this.pelota.body.setVelocityY * 1.1);
+            this.pelota.body.setVelocityY = this.pelota.body.setVelocity * 1.1;
 
             const color = Phaser.Display.Color.RandomRGB(50, 200);
             this.cameras.main.setBackgroundColor(color.color);
+          }
 
+          if (this.nivel == 20) {
+            this.ganar();
           }
 
     }
 
     sumarPuntos( pala, pelota){
 
+      if (this.pelota.body.velocity.x > 0) {
+        this.pelota.body.setVelocity = this.pelota.body.setVelocity;
+      }    
+
     this.suma++; 
 
     this.scoreText.setText (
-        "TOQUES: " + this.suma
+        "PUNTOS: " + this.suma
     );
     }
 
@@ -103,6 +109,18 @@ export default class Game extends Phaser.Scene {
         this.obstaculo.create(RandomX, RandomY, "pala").setScale(RandomScale);
 
         console.log( "agregar obstaculo");
+    }
+
+    ganar(){
+
+      this.winnerText = this.add.text(180,150, "GANASTE",{
+
+        fontSize: "60px",
+
+      });
+
+      this.pala.disableBody(true, true);
+      this.pelota.disableBody(true, true);
     }
 
 }
